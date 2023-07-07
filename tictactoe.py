@@ -55,11 +55,47 @@ def playerMove():
 
 
 def compMove():
-    return 0
+    possibleMoves = [x for x, letter in enumerate(board) if letter == ' ' and x != 0]
+    move = 0
+
+    for let in ['O', 'X']:
+        for i in possibleMoves:
+            boardCopy = board[:]
+            boardCopy[i] = let
+            if isWinner(boardCopy, let):
+                move = i
+                return move
+
+    # insert in one of the corners if possible
+    cornersOpen = []
+    for i in possibleMoves:
+        if i in [1, 3, 7, 9]:
+            cornersOpen.append(i)
+    if len(cornersOpen) > 0:
+        move = selectRandom(cornersOpen)
+        return move
+
+    # insert in center if possible
+    if 5 in possibleMoves:
+        move = 5
+        return move
+
+    # insert in one of the edges if possible
+    edgesOpen = []
+    for i in possibleMoves:
+        if i in [2, 4, 6, 8]:
+            edgesOpen.append(i)
+    if len(edgesOpen) > 0:
+        move = selectRandom(edgesOpen)
+
+    return move
 
 
-def selectRandom():
-    pass
+def selectRandom(li):
+    import random
+    ln = len(li)
+    r = random.randrange(0, ln)
+    return li[r]
 
 
 def isBoardFull():
@@ -85,7 +121,7 @@ def main():
             if move == 0:
                 print("Tie Game!")
             else:
-                insertLetter('O', board)
+                insertLetter('O', move)
                 print('Computer placed  an \'O\' in position,', move, ':')
                 printBoard()
 
